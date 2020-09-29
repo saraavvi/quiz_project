@@ -18,17 +18,40 @@ class Questions {
         //när next klickas ska nästa fråga skrivas ut.
         let nextBtn = document.getElementById('nextBtn');
         nextBtn.addEventListener ('click', (e) => {
+            this.removeAll();
             this.nextQuestion();
         })
-        console.log(nextBtn);
 
     }
+    //ta bort alternativen. Nya kommer skapas för nästa fråga.
+    removeAll(){
+        let choiceElements = document.querySelectorAll('p');
+        choiceElements.forEach(function(element){
+            element.remove();
+        })
+    }
+    //skriver ut nästa fråga med alternativ
     nextQuestion(){
         let currentQuestion = this.quizArray[this.questionNumber];
         console.log(currentQuestion);
         this.questionNumber++;
-        console.log(this.questionNumber);
+        console.log('nästa frågan som skrivs ut är följande nummer från arrayen:' + this.questionNumber);
+
+        let quizContainer = document.getElementById('quizContainer');
+        let questionContainer = document.getElementById('questionContainer');
+        questionContainer.innerText = currentQuestion.question;
+    
+        //loopa igenom objektet för skapa element av de svarsalternativ som inte är null
+        for(let prop in currentQuestion.answers){
+            if(currentQuestion.answers[prop] !== null){
+                console.log(currentQuestion.answers[prop])
+                let choice = document.createElement('p');
+                choice.innerText = currentQuestion.answers[prop];
+                quizContainer.append(choice);
+            }
+        }
     }
+    
     //håller reda på frågorna med alternativen, hur många alternativ, vilket/vilka som är rätt
     //skriver ut en fråga med alternativ
 
@@ -41,6 +64,7 @@ class Questions {
 
 
 //när man klickar på starta-knappen hämtas alla frågor mm från api, sparas i array och skrickas till class questions
+// samt första frågan skrivs ut.
 let startBtn = document.getElementById('startBtn').addEventListener('click', function(){
   
 fetch('https://quizapi.io/api/v1/questions?apiKey=7XRH2oR7PfuWCijQLCYIFvRXdtIDwumiF1eyWpbg&limit=10')
@@ -51,8 +75,8 @@ fetch('https://quizapi.io/api/v1/questions?apiKey=7XRH2oR7PfuWCijQLCYIFvRXdtIDwu
     quizArray.push(data[i]); 
     let newQuestions = new Questions(quizArray); 
     newQuestions.nextQuestion();
-});
 
+});
 
 });
 
