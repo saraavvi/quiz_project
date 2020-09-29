@@ -11,12 +11,23 @@ class Game {
 
 }
 class Questions {
-    constructor(){
+    constructor(quizArray){ // array innehåller alla hämtade objekt
+        this.quizArray = quizArray;
+        console.log(this.quizArray);
+        this.questionNumber = 0;
+        //när next klickas ska nästa fråga skrivas ut.
+        let nextBtn = document.getElementById('nextBtn');
+        nextBtn.addEventListener ('click', (e) => {
+            this.nextQuestion();
+        })
+        console.log(nextBtn);
 
     }
-   
     nextQuestion(){
-
+        let currentQuestion = this.quizArray[this.questionNumber];
+        console.log(currentQuestion);
+        this.questionNumber++;
+        console.log(this.questionNumber);
     }
     //håller reda på frågorna med alternativen, hur många alternativ, vilket/vilka som är rätt
     //skriver ut en fråga med alternativ
@@ -28,42 +39,26 @@ class Questions {
     //när spelet är slut ska användaren kunna välja att starta ett nytt spel med nya frågor
 }
 
-class Question {
-    constructor(question, choices, currQuestion){
-        this.question = question;
-        this.choices = choices;
-        this.currQuestion = currQuestion;
-    
-    }
-    printQuestion(){
-        console.log(this.question);
-        console.log(this.choices);
-        console.log(this.currQuestion);
-        this.currQuestion++;
-    }
 
-}
 //när man klickar på starta-knappen hämtas alla frågor mm från api, sparas i array och skrickas till class questions
-
-let currQuestion = 0;
 let startBtn = document.getElementById('startBtn').addEventListener('click', function(){
-    currQuestion++;
+  
 fetch('https://quizapi.io/api/v1/questions?apiKey=7XRH2oR7PfuWCijQLCYIFvRXdtIDwumiF1eyWpbg&limit=10')
 .then(response => response.json())
 .then(data => { 
-    console.log(data) 
-    let question = data[currQuestion].question;
-    let choices = data[currQuestion].answers;
-    newQuestion = new Question(question, choices, currQuestion);
-    newQuestion.printQuestion();
+    let quizArray = []; 
+    for(let i = 0; i < 10; i++)
+    quizArray.push(data[i]); 
+    let newQuestions = new Questions(quizArray); 
+    newQuestions.nextQuestion();
 });
+
 
 });
 
-let nextBtn = document.getElementById('nextBtn').addEventListener('click', function(){
-    let newQuestion = new Question(question, choices, currQuestion);
-    newQuestion.printQuestion();
-});
+
+
+
 
 
 
