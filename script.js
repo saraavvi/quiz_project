@@ -32,6 +32,7 @@ class Questions {
     constructor(quizArray){ // array innehåller alla hämtade objekt
         this.quizArray = quizArray;
         console.log(this.quizArray);
+        this.numberOfCorrectAnswers = 0;
         this.questionNumber = 0; // ska hålla reda på vilken av de 10 frågor i arrayen vi är på.
         //när next klickas ska nuvarande alternativ tas bort och nästa fråga skrivas ut.
         let nextBtn = document.getElementById('nextBtn'); // saker här borde vara i displayGameStatus ist.
@@ -57,18 +58,21 @@ class Questions {
         //FIXA: om questionNumber >= 11: jämför (i en annan metod)användarens svar med rätt svar.
         //annars questionNumber++
         this.questionNumber++;
-        console.log('nästa frågan som skrivs ut är följande nummer från arrayen:' + this.questionNumber);
+        //console.log('nästa frågan som skrivs ut är följande nummer från arrayen:' + this.questionNumber);
 
         let quizContainer = document.getElementById('quizContainer');
         let questionContainer = document.getElementById('questionContainer');
 
         //skriver ut frågan i rubriken
         questionContainer.innerText = currentQuestion.question;
-    
+        
+        let checkboxes = [];
+        let correct = 0;
         //loopa igenom objektet för skapa element av de svarsalternativ som inte är null
         for(let value in currentQuestion.answers){
             if(currentQuestion.answers[value] !== null){
-                console.log(currentQuestion.answers[value])
+                correct++;
+                //console.log(currentQuestion.answers[value])
 
                 let choice = document.createElement('p');
                 quizContainer.append(choice);
@@ -77,9 +81,52 @@ class Questions {
                 let checkbox = document.createElement('input');
                 checkbox.setAttribute('type', 'checkbox')
                 choice.append(checkbox);
+                checkboxes.push(checkbox);
             }
         }
+        console.log('rätt svarsnummer:' + correct);
+        //console.log(checkboxes);
+
+        //submitknappen ska tryckas på efter man tryckt i valda checkboxar och då ska dessa jämföras med
+        //correct answers.
+        let submitButton = document.createElement('button');
+        submitButton.setAttribute('type', 'button');
+        submitButton.innerText = 'submit';
+        quizContainer.append(submitButton);
+
+        let guessCorrect = 0
+        
+        submitButton.addEventListener('click', () => {
+            //skapa en array av alla true/false answers för att kunna jämföra med checkboxarna 
+            let answers = [];
+            for(let answer in currentQuestion.correct_answers){
+                answers.push(currentQuestion.correct_answers[answer]);
+            }
+            console.log(answers);
+            
+            //loopa igenom checkboxarna 
+            //om checkboxen är icheckad OCH answer = true: quesscorrect++
+            //om checkboxen är ochekad OCH answer = false: guesscorrect++;
+            //sedan jämför correct med guesscorrect (correct === guesscorrect)för att se om användaren har rätt. 
+            for(let i = 0; i < correct; i++){
+                if(checkboxes[i].checked && answers[i] === "true" ){
+                    guessCorrect++;
+                }
+                if(!checkboxes[i].checked && answers[i] === "false"){
+                    guessCorrect++;
+                }
+            }
+            console.log('användarens svarsnummer: ' + guessCorrect);
+            if(correct === guessCorrect){
+                this.numberOfCorrectAnswers++;
+                
+            }
+            console.log('antal rätt hittills: ' + this.numberOfCorrectAnswers);
+        }); 
+          
     }
+
+    
     
    //när man har tryckt på starta, ska namnes sparas någonstans. sen kan starta-knappen och namnrutan tas bort
    
@@ -96,14 +143,5 @@ let startBtn = document.getElementById('startBtn').addEventListener('click', fun
 game = new Game();
 
 });
-
-
-
-
-
-
-
-
-
 
 
