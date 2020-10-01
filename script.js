@@ -41,14 +41,18 @@ class Questions {
             this.removeAll();
             this.nextQuestion();
         })
+        //let submitBtn = document.getElementById('submitBtn');
 
     }
-    //ta bort alternativen. Nya kommer skapas för nästa fråga.
+    //ta bort alternativen och tillhörande submitknapp. Nya kommer skapas för nästa fråga.
     removeAll(){
         let choiceElements = document.querySelectorAll('p');
         choiceElements.forEach(function(element){
             element.remove();
         })
+        let inputElements = document.querySelector('.submitButton');
+        inputElements.remove();
+        
     }
      //skriver ut frågan, kollar hur hur många alternativ frågan har och skriver ut dessa vad tillhörande checkbox.
     nextQuestion(){
@@ -92,6 +96,7 @@ class Questions {
         let submitButton = document.createElement('button');
         submitButton.setAttribute('type', 'button');
         submitButton.innerText = 'submit';
+        submitButton.className = "submitButton";
         quizContainer.append(submitButton);
 
         let guessCorrect = 0
@@ -121,7 +126,7 @@ class Questions {
                 this.numberOfCorrectAnswers++;
                 
             }
-            console.log('antal rätt hittills: ' + this.numberOfCorrectAnswers);
+           console.log('antal rätt hittills: ' + this.numberOfCorrectAnswers); 
         }); 
           
     }
