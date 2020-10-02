@@ -1,9 +1,6 @@
-class Game { //byt namn på class
+class GameSetup { //byt namn på class
     constructor(){
-    //spelarens namn hämtas från inputfältet och sparas i en variabel.
     this.playerName = document.getElementById('playerName').value;
-    // hålla reda på hur många frågor det är kvar. fixa metod som skriver ut
-    //console.log(playerName);
     this.displayGame();
     this.fetchArray();
     }
@@ -57,9 +54,16 @@ class Questions { //byt namn på class
         heading.innerText = "Result";
         nextBtn.classList.toggle('hideElement');
         this.removeAll()
-        questionContainer.innerText = this.numberOfCorrectAnswers + " av 10"
+        questionContainer.innerText = this.numberOfCorrectAnswers + " av 10" // kanske inte ska heta questionContainer eftersom den även innehåller annat (resultnumbers):
 
-        //skapa en playagain-knapp. om den trycks kommer man tillbaks till "start" alltså ett new Game
+        //skapa en playagain-knapp. om den trycks kommer man tillbaks till "start" 
+        let playAgainBtn = document.createElement('button');
+        playAgainBtn.innerHTML = "Play Again";
+        quizContainer.append(playAgainBtn);
+        playAgainBtn.addEventListener('click', function(e){
+            location.reload();
+        });
+
     }
 
     //ta bort alternativen och tillhörande submitknapp. Nya kommer skapas för nästa fråga.
@@ -78,7 +82,6 @@ class Questions { //byt namn på class
      //skriver ut nästa fråga
      //kollar hur hur många alternativ frågan har och skriver ut dessa med tillhörande checkbox.
     nextQuestion(){
-
 
         //hämtar "rätt" fråga från arrayen genom att använda det index som qustionNumber nu är på. 
         //ökar sedan questionNumber tillnästa runda.
@@ -168,7 +171,7 @@ class Questions { //byt namn på class
 //när man klickar på starta-knappen skapas ett nytt game 
 let startBtn = document.getElementById('startBtn').addEventListener('click', function(){
 
-game = new Game();
+game = new GameSetup();
 
 });
 
