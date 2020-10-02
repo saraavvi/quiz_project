@@ -1,50 +1,67 @@
 class Game { //byt namn på class
     constructor(){
     //spelarens namn hämtas från inputfältet och sparas i en variabel.
-    let playerName = document.getElementById('playerName').value;
-    let questionsleft = 10; // hålla reda på hur många frågor det är kvar. fixa metod som skriver ut 
+    this.playerName = document.getElementById('playerName').value;
+    // hålla reda på hur många frågor det är kvar. fixa metod som skriver ut
+    //console.log(playerName);
     this.displayGame();
     this.fetchArray();
     }
 
     fetchArray(){
 
-        //hämtar alla frågor mm från api, sparas i array och skrickas till class questions samt första frågan skrivs ut.
+        //hämtar alla frågor mm från api, sparas i data och skrickas till class questions samt första frågan skrivs ut.
         fetch('https://quizapi.io/api/v1/questions?apiKey=7XRH2oR7PfuWCijQLCYIFvRXdtIDwumiF1eyWpbg&limit=10')
-        .then(response => response.json())
-        .then(data => { 
-        let quizArray = []; 
-        for(let i = 0; i < 10; i++)
-        quizArray.push(data[i]); 
-        let newQuestions = new Questions(quizArray); //flytta detta till constructorn och kalla på new questions där istället
-        newQuestions.nextQuestion();
-        });
-    }
-    
-    //dölj "startsida" för nu ska frågorna visas istället
-    displayGame(){
-        let startDisplay = document.getElementById('startDisplay');
-        startDisplay.classList.toggle('hideElement');
-        
+            .then(response => response.json())
+            .then(data => { 
+                let newQuestions = new Questions(data); 
+                newQuestions.nextQuestion();
+            });
     }
 
+    //dölj "startsida" för nu ska frågorna visas istället
+    displayGame = () => {
+
+        let heading = document.getElementById('heading');
+        heading.innerText = "Nu spelar: " + this.playerName;
+
+        let startDisplay = document.getElementById('startDisplay');
+        startDisplay.classList.toggle('hideElement');
+         }
 }
+
 class Questions { //byt namn på class
-    constructor(quizArray){ // tar emot arrayen med frågor så att dessa kan användas här.
-        this.quizArray = quizArray;
+    constructor(data){ // tar emot arrayen med frågor så att dessa kan användas här.
+        this.quizArray = data;
         console.log(this.quizArray);
         this.numberOfCorrectAnswers = 0; // håller reda på hur många rätt spelar har hittills
         this.questionNumber = 0; // håller reda på vilken av de 10 frågor i arrayen vi är på just nu.
         
         //hämtar och synliggör nästaknappen samt ger den en eventlistener så att de två metoderna då körs.
         let nextBtn = document.getElementById('nextBtn'); 
-        nextBtn.classList.toggle('hideElement');
+        //nextBtn.classList.toggle('hideElement');
         nextBtn.addEventListener ('click', (e) => {
-            this.removeAll();
-            this.nextQuestion();
+            if(this.questionNumber >= 10){
+                this.printResult();
+            }else{
+                nextBtn.classList.toggle('hideElement');
+                this.removeAll();
+                this.nextQuestion();
+            }
+            
         })
 
     }
+    printResult(){
+        let heading = document.getElementById('heading');
+        heading.innerText = "Result";
+        nextBtn.classList.toggle('hideElement');
+        this.removeAll()
+        questionContainer.innerText = this.numberOfCorrectAnswers + " av 10"
+
+        //skapa en playagain-knapp. om den trycks kommer man tillbaks till "start" alltså ett new Game
+    }
+
     //ta bort alternativen och tillhörande submitknapp. Nya kommer skapas för nästa fråga.
     removeAll(){
 
@@ -55,11 +72,13 @@ class Questions { //byt namn på class
 
         let inputElements = document.querySelector('.submitButton');
         inputElements.remove();
+
         
     }
      //skriver ut nästa fråga
      //kollar hur hur många alternativ frågan har och skriver ut dessa med tillhörande checkbox.
     nextQuestion(){
+
 
         //hämtar "rätt" fråga från arrayen genom att använda det index som qustionNumber nu är på. 
         //ökar sedan questionNumber tillnästa runda.
@@ -108,6 +127,7 @@ class Questions { //byt namn på class
 
         let guessCorrect = 0 // kommer hålla reda på om användaren klickat i rätt eller inte.
         submitButton.addEventListener('click', () => {
+            nextBtn.classList.toggle('hideElement');
 
             //skapa en array med alla true/false answers för att kunna jämföra med checkboxarna 
             let trueOrFalse = [];
@@ -151,5 +171,6 @@ let startBtn = document.getElementById('startBtn').addEventListener('click', fun
 game = new Game();
 
 });
+
 
 
