@@ -25,7 +25,7 @@ class GameSetup {
     displayGame = () => {
 
         let heading = document.getElementById('heading');
-        heading.innerText = "Nu spelar: " + this.playerName;
+        heading.innerText = "Player Name: " + this.playerName;
 
         let startDisplay = document.getElementById('startDisplay');
         startDisplay.classList.toggle('hideElement');
@@ -49,10 +49,8 @@ class Questions { //byt namn på class
                 nextBtn.classList.toggle('hideElement');
                 this.removeAll();
                 this.nextQuestion();
-            }
-            
+            }          
         })
-
     }
 
     //ta bort alternativen och tillhörande submitknapp. Nya kommer skapas för nästa fråga.
@@ -83,6 +81,9 @@ class Questions { //byt namn på class
         //hämtar divarna som ska innehålla alla element: frågor och alternativ.
         let quizContainer = document.getElementById('quizContainer');
         let questionContainer = document.getElementById('questionContainer');
+        let displayCurrQuestion = document.getElementById('displayCurrQuestion');
+        displayCurrQuestion.innerText = 'Question ' + this.questionNumber + '/ ' + this.quizArray.length;
+
 
         //skriver ut frågan i rubriken
         questionContainer.innerText = currentQuestion.question;
@@ -131,7 +132,7 @@ class Questions { //byt namn på class
         }); 
     }
     //metod som kontrollerar om användaren har avarat rätt eller inte
-    correct(trueOrFalse, checkboxes, correct, ){
+    correct(trueOrFalse, checkboxes, correct){
 
         nextBtn.classList.toggle('hideElement');
    
@@ -162,6 +163,10 @@ class Questions { //byt namn på class
     printResult(){
         let heading = document.getElementById('heading');
         heading.innerText = "Result";
+
+        let displayCurrQuestion = document.getElementById('displayCurrQuestion');
+        displayCurrQuestion.classList.toggle('hideElement');
+
         nextBtn.classList.toggle('hideElement');
         this.removeAll()
         questionContainer.innerText = this.numberOfCorrectAnswers + ' av ' + this.quizArray.length; // kanske inte ska heta questionContainer eftersom den även innehåller annat (resultnumbers):
@@ -173,7 +178,6 @@ class Questions { //byt namn på class
         playAgainBtn.addEventListener('click', function(e){
             location.reload();
         });
-
     }
 }
 
