@@ -1,7 +1,7 @@
-class GameSetup { //byt namn på class
+class GameSetup { 
     constructor(){
-    this.playerName = document.getElementById('playerName').value;
-    this.displayGame();
+    let playerName = document.getElementById('playerName').value;
+    this.displayGame(playerName);
     this.fetchArray();
     }
 
@@ -16,11 +16,11 @@ class GameSetup { //byt namn på class
             });
     }
 
-    //dölj "startsida" för nu ska frågorna visas istället
-    displayGame = () => {
+    //dölj "startsida" och visa quizet
+    displayGame = (playerName) => {
 
         let heading = document.getElementById('heading');
-        heading.innerText = "Nu spelar: " + this.playerName;
+        heading.innerText = "Nu spelar: " + playerName;
 
         let startDisplay = document.getElementById('startDisplay');
         startDisplay.classList.toggle('hideElement');
@@ -128,47 +128,53 @@ class Questions { //byt namn på class
         submitButton.className = "submitButton";
         quizContainer.append(submitButton);
 
-        let guessCorrect = 0 // kommer hålla reda på om användaren klickat i rätt eller inte.
+        //skapa en array med alla true/false answers för att kunna jämföra med checkboxarna 
+        let trueOrFalse = [];
+        for(let answer in currentQuestion.correct_answers){
+            trueOrFalse.push(currentQuestion.correct_answers[answer]);
+        }
+        console.log(trueOrFalse);
+        //när sublitknappen trycks ska correct metoden köras som tar in tre parametrar som behövs för att kontrollera.
         submitButton.addEventListener('click', () => {
-            nextBtn.classList.toggle('hideElement');
-
-            //skapa en array med alla true/false answers för att kunna jämföra med checkboxarna 
-            let trueOrFalse = [];
-            for(let answer in currentQuestion.correct_answers){
-                trueOrFalse.push(currentQuestion.correct_answers[answer]);
-            }
-            console.log(trueOrFalse);
-            
-            //loopa igenom checkboxarna och jämför med trueOrFalse:
-            //om checkboxen är icheckad OCH answer = true: quesscorrect++
-            //om checkboxen inte är ichekad OCH answer = false: guesscorrect++;
-            //sedan jämför correct med guesscorrect (correct === guesscorrect)för att se om användaren har rätt. 
-            for(let i = 0; i < correct; i++){
-                if(checkboxes[i].checked && trueOrFalse[i] === "true" ){
-                    guessCorrect++;
-                }
-                if(!checkboxes[i].checked && trueOrFalse[i] === "false"){
-                    guessCorrect++;
-                }
-            }
-            console.log('användarens svarsnummer: ' + guessCorrect);
-            //nu kan de rätta alternativen jämföras med användarens val. (måste vara samma siffra)
-            //om svaret är correct så kommer numberOfCorrectAnswers att öka med 1. 
-            if(correct === guessCorrect){
-                this.numberOfCorrectAnswers++;
-                
-            }
-           console.log('antal rätt hittills: ' + this.numberOfCorrectAnswers); 
-           submitButton.disabled = true;
+            this.correct(trueOrFalse, checkboxes, correct);
+            submitButton.disabled = true;
+           
         }); 
-          
     }
-    //nästa-knappen ska endast gå att trycka på när något alternativ är valt. (inte prio)
-    //när spelet är slut ska användaren få se sitt resultat, och sen kunna välja att starta ett nytt spel med nya frågor
+    //metod som kontrollerar om användaren har avarat rätt eller inte
+    correct(trueOrFalse, checkboxes, correct, ){
+
+        nextBtn.classList.toggle('hideElement');
+   
+        //loopa igenom checkboxarna och jämför med trueOrFalse:
+        //om checkboxen är icheckad OCH answer = true: quesscorrect++
+        //om checkboxen inte är ichekad OCH answer = false: guesscorrect++;
+        //sedan jämför correct med guesscorrect (correct === guesscorrect)för att se om användaren har rätt. 
+        let guessCorrect = 0 // kommer hålla reda på om användaren klickat i rätt eller inte.
+        for(let i = 0; i < correct; i++){
+            if(checkboxes[i].checked && trueOrFalse[i] === "true" ){
+                guessCorrect++;
+            }
+            if(!checkboxes[i].checked && trueOrFalse[i] === "false"){
+                guessCorrect++;
+            }
+        }
+        console.log('användarens svarsnummer: ' + guessCorrect);
+        //nu kan de rätta alternativen jämföras med användarens val. (måste vara samma siffra)
+        //om svaret är correct så kommer numberOfCorrectAnswers att öka med 1. 
+        if(correct === guessCorrect){
+            this.numberOfCorrectAnswers++;
+            
+        }
+       console.log('antal rätt hittills: ' + this.numberOfCorrectAnswers); 
+       
+
+    }
 }
 
+//todo:
+// flytta över vissa variabler som finns i nextQuestion till contructorn som passar bättre där?
 
-//när man klickar på starta-knappen skapas ett nytt game 
 let startBtn = document.getElementById('startBtn').addEventListener('click', function(){
 
 game = new GameSetup();
