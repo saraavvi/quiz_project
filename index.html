@@ -13,7 +13,10 @@
         <h1 id="heading">Quiz</h1>
 
         <div id="startDisplay">
-            <input id="playerName" placeholder="Namn" type="text">
+            <label for="playerName">Player Name:</label> 
+            <input id="playerName" placeholder="your name" type="text"> <br>
+            <label for="numOfQuestions">Number of questions:</label>
+            <input id="numOfQuestions" type="number" value="10" min="5" max="10"> <br>
             <button id="startBtn">Starta</button>
         </div>
         
@@ -25,6 +28,6 @@
     </div>
     
     <script src="script.js"></script>
-    
+
 </body>
 </html>

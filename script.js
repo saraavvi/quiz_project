@@ -1,26 +1,31 @@
 class GameSetup { 
     constructor(){
-    let playerName = document.getElementById('playerName').value;
-    this.displayGame(playerName);
-    this.fetchArray();
+    this.playerName = document.getElementById('playerName').value;
+    this.numOfQuestions = Number(document.getElementById('numOfQuestions').value);
+    this.displayGame();
+    this.fetchQuestions();
     }
 
-    fetchArray(){
+    fetchQuestions(){
 
         //hämtar alla frågor mm från api, sparas i data och skrickas till class questions samt första frågan skrivs ut.
         fetch('https://quizapi.io/api/v1/questions?apiKey=7XRH2oR7PfuWCijQLCYIFvRXdtIDwumiF1eyWpbg&limit=10')
             .then(response => response.json())
             .then(data => { 
-                let newQuestions = new Questions(data); 
+                let quizArray = [];
+                for(let i = 0; i < this.numOfQuestions; i++){
+                    quizArray.push(data[i]);
+                }
+                let newQuestions = new Questions(quizArray); 
                 newQuestions.nextQuestion();
             });
     }
 
     //dölj "startsida" och visa quizet
-    displayGame = (playerName) => {
+    displayGame = () => {
 
         let heading = document.getElementById('heading');
-        heading.innerText = "Nu spelar: " + playerName;
+        heading.innerText = "Nu spelar: " + this.playerName;
 
         let startDisplay = document.getElementById('startDisplay');
         startDisplay.classList.toggle('hideElement');
@@ -28,8 +33,8 @@ class GameSetup {
 }
 
 class Questions { //byt namn på class
-    constructor(data){ // tar emot arrayen med frågor så att dessa kan användas här.
-        this.quizArray = data;
+    constructor(quizArray){ // tar emot arrayen med frågor så att dessa kan användas här.
+        this.quizArray = quizArray;
         console.log(this.quizArray);
         this.numberOfCorrectAnswers = 0; // håller reda på hur många rätt spelar har hittills
         this.questionNumber = 0; // håller reda på vilken av de 10 frågor i arrayen vi är på just nu.
@@ -38,7 +43,7 @@ class Questions { //byt namn på class
         let nextBtn = document.getElementById('nextBtn'); 
         //nextBtn.classList.toggle('hideElement');
         nextBtn.addEventListener ('click', (e) => {
-            if(this.questionNumber >= 10){
+            if(this.questionNumber >= quizArray.length){
                 this.printResult();
             }else{
                 nextBtn.classList.toggle('hideElement');
@@ -47,22 +52,6 @@ class Questions { //byt namn på class
             }
             
         })
-
-    }
-    printResult(){
-        let heading = document.getElementById('heading');
-        heading.innerText = "Result";
-        nextBtn.classList.toggle('hideElement');
-        this.removeAll()
-        questionContainer.innerText = this.numberOfCorrectAnswers + " av 10" // kanske inte ska heta questionContainer eftersom den även innehåller annat (resultnumbers):
-
-        //skapa en playagain-knapp. om den trycks kommer man tillbaks till "start" 
-        let playAgainBtn = document.createElement('button');
-        playAgainBtn.innerHTML = "Play Again";
-        quizContainer.append(playAgainBtn);
-        playAgainBtn.addEventListener('click', function(e){
-            location.reload();
-        });
 
     }
 
@@ -168,6 +157,22 @@ class Questions { //byt namn på class
         }
        console.log('antal rätt hittills: ' + this.numberOfCorrectAnswers); 
        
+
+    }
+    printResult(){
+        let heading = document.getElementById('heading');
+        heading.innerText = "Result";
+        nextBtn.classList.toggle('hideElement');
+        this.removeAll()
+        questionContainer.innerText = this.numberOfCorrectAnswers + ' av ' + this.quizArray.length; // kanske inte ska heta questionContainer eftersom den även innehåller annat (resultnumbers):
+
+        //skapa en playagain-knapp. om den trycks kommer man tillbaks till "start" 
+        let playAgainBtn = document.createElement('button');
+        playAgainBtn.innerHTML = "Play Again";
+        quizContainer.append(playAgainBtn);
+        playAgainBtn.addEventListener('click', function(e){
+            location.reload();
+        });
 
     }
 }
