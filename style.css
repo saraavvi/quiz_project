@@ -1,8 +1,17 @@
 
 .container {
     margin: 0 auto;
-    text-align: center;
-   
+    text-align: center;  
+}
+
+#startDisplay label {
+    display:inline-block;
+    margin-top: 10px;
+}
+
+#startBtn{
+    margin-top: 40px;
+    padding: 10px;
 }
 
 .hideElement {

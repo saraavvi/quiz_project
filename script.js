@@ -23,6 +23,9 @@ class GameSetup {
 
     //dölj "startsida" och visa quizet
     displayGame = () => {
+        let nextBtn = document.getElementById('nextBtn'); 
+        nextBtn.classList.toggle('hideElement');
+        nextBtn.disabled = true;
 
         let heading = document.getElementById('heading');
         heading.innerText = "Player Name: " + this.playerName;
@@ -46,15 +49,14 @@ class Questions { //byt namn på class
             if(this.questionNumber >= quizArray.length){
                 this.printResult();
             }else{
-                nextBtn.classList.toggle('hideElement');
-                this.removeAll();
+                this.removePrevious();
                 this.nextQuestion();
             }          
         })
     }
 
     //ta bort alternativen och tillhörande submitknapp. Nya kommer skapas för nästa fråga.
-    removeAll(){
+    removePrevious(){
 
         let choiceElements = document.querySelectorAll('p');
         choiceElements.forEach(function(element){
@@ -69,6 +71,8 @@ class Questions { //byt namn på class
      //skriver ut nästa fråga
      //kollar hur hur många alternativ frågan har och skriver ut dessa med tillhörande checkbox.
     nextQuestion(){
+
+        nextBtn.disabled = true;
 
         //hämtar "rätt" fråga från arrayen genom att använda det index som qustionNumber nu är på. 
         //ökar sedan questionNumber tillnästa runda.
@@ -127,6 +131,7 @@ class Questions { //byt namn på class
         //när sublitknappen trycks ska correct metoden köras som tar in tre parametrar som behövs för att kontrollera.
         submitButton.addEventListener('click', () => {
             this.correct(trueOrFalse, checkboxes, correct);
+            nextBtn.disabled = false;
             submitButton.disabled = true;
            
         }); 
@@ -134,7 +139,7 @@ class Questions { //byt namn på class
     //metod som kontrollerar om användaren har avarat rätt eller inte
     correct(trueOrFalse, checkboxes, correct){
 
-        nextBtn.classList.toggle('hideElement');
+        //nextBtn.classList.toggle('hideElement');
    
         //loopa igenom checkboxarna och jämför med trueOrFalse:
         //om checkboxen är icheckad OCH answer = true: quesscorrect++
@@ -168,7 +173,7 @@ class Questions { //byt namn på class
         displayCurrQuestion.classList.toggle('hideElement');
 
         nextBtn.classList.toggle('hideElement');
-        this.removeAll()
+        this.removePrevious()
         questionContainer.innerText = this.numberOfCorrectAnswers + ' av ' + this.quizArray.length; // kanske inte ska heta questionContainer eftersom den även innehåller annat (resultnumbers):
 
         //skapa en playagain-knapp. om den trycks kommer man tillbaks till "start" 
@@ -181,8 +186,7 @@ class Questions { //byt namn på class
     }
 }
 
-//todo:
-// flytta över vissa variabler som finns i nextQuestion till contructorn som passar bättre där?
+
 
 let startBtn = document.getElementById('startBtn').addEventListener('click', function(){
 
