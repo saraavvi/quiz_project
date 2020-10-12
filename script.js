@@ -1,4 +1,4 @@
-class GameSetup { 
+class QuizSetup { 
     constructor(){
     this.playerName = document.getElementById('playerName').value;
     this.numOfQuestions = Number(document.getElementById('numOfQuestions').value); 
@@ -19,7 +19,7 @@ class GameSetup {
                 let quizArray = dataArray.map((obj) =>{ // gör en ny array med objact om endast inehåller de egenskaper vi behöver. 
                     return new Question(obj.question, obj.answers, obj.correct_answers);
                 });
-                let newQuestions = new Questions(quizArray); 
+                let newQuestions = new QuizGame(quizArray); 
                 newQuestions.nextQuestion();
             });
     }
@@ -46,14 +46,14 @@ class Question{
     }
 }
 
-class Questions { //byt namn på class
-    constructor(quizArray){ // tar emot arrayen med frågor så att dessa kan användas här.
+class QuizGame { 
+    constructor(quizArray){ 
         this.quizArray = quizArray;
         this.numberOfCorrectAnswers = 0; // håller reda på hur många rätt spelar har hittills
         this.questionNumber = 0; // håller reda på vilken av de 10 frågor i arrayen vi är på just nu.
         console.log(this.quizArray);
         
-        //hämtar och synliggör nästaknappen samt ger den en eventlistener så att de två metoderna då körs.
+        //get nästaknappen en eventlistener så att när den klickas skrivs antingen nästa fråga ut eller resultatet.
         this.nextBtn = document.getElementById('nextBtn') 
         this.nextBtn.addEventListener ('click', (e) => {
             if(this.questionNumber >= quizArray.length){
@@ -96,7 +96,7 @@ class Questions { //byt namn på class
         displayCurrQuestion.innerText = 'Question ' + this.questionNumber + '/ ' + this.quizArray.length;
         questionContainer.innerText = currentQuestion.question;
         
-        //loopar igenom objektet med svaren för skapa element av de svarsalternativ som inte är null
+        //loopar igenom svaren för skapa element av de svarsalternativ som inte är null
         //correct kommer innehålla siffra för detta antal. Denna siffra kommer att användas senare för att kontrollera svar. 
         //checkbox skapas till varje svarsalternativ, de läggs också i checkboses som används senare för att kontrollera svar.
         let checkboxes = [];
@@ -131,14 +131,14 @@ class Questions { //byt namn på class
         submitButton.className = "submitButton";
         quizContainer.append(submitButton);
 
-        //när sublitknappen trycks ska correct metoden köras som tar in tre parametrar som behövs för att kontrollera.
+        //när submitknappen trycks ska correct metoden köras som tar in tre argument som behövs för att kontrollera.
         submitButton.addEventListener('click', () => {
             this.correct(trueOrFalse, checkboxes, correct);
             nextBtn.disabled = false;
             submitButton.disabled = true; 
         }); 
     }
-    //metod som kontrollerar om användaren har avarat rätt eller inte
+    //metod som kontrollerar om användaren har svarat rätt eller inte
     correct(trueOrFalse, checkboxes, correct){
    
         //loopa igenom checkboxarna och jämför med trueOrFalse:
@@ -165,7 +165,7 @@ class Questions { //byt namn på class
 
     printResult(){
         let heading = document.getElementById('heading');
-        heading.innerText = "Result";
+        heading.innerText = "Result:";
 
         let displayCurrQuestion = document.getElementById('displayCurrQuestion');
         displayCurrQuestion.classList.toggle('hideElement');
@@ -175,7 +175,7 @@ class Questions { //byt namn på class
         this.removePrevious();
 
         let questionContainer = document.getElementById('questionContainer');
-        questionContainer.innerText = this.numberOfCorrectAnswers + ' av ' + this.quizArray.length; // kanske inte ska heta questionContainer eftersom den även innehåller annat (resultnumbers):
+        questionContainer.innerText = this.numberOfCorrectAnswers + ' av ' + this.quizArray.length; 
 
         //skapa en playagain-knapp. om den trycks kommer man tillbaks till "start" 
         let playAgainBtn = document.createElement('button');
@@ -191,7 +191,7 @@ class Questions { //byt namn på class
 
 let startBtn = document.getElementById('startBtn').addEventListener('click', function(){
 
-game = new GameSetup();
+game = new QuizSetup();
 
 });
 
