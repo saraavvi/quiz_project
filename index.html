@@ -1,35 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <link rel="stylesheet" href="style.css">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz</title>
-</head>
-<body>
+  <head>
+    <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <title>Javascript Quiz Game</title>
+  </head>
+  <body>
+    <div class="grid-container">
+      <h1 id="heading">Javascript Quiz Game</h1>
+      <div class="container game-container">
+        <div class="content">
+          <h2 id="displayCurrQuestion"></h2>
 
-    <div class="container">
-
-        <h1 id="heading">Quiz</h1>
-        <h2 id="displayCurrQuestion"></h2>
-        
-        <div id="startDisplay">
-            <label for="playerName">Player Name:</label> 
-            <input id="playerName" placeholder="your name" type="text"> <br>
+          <div id="startDisplay">
+            <label for="playerName">Player Name:</label>
+            <input id="playerName" placeholder="your name" type="text" /> <br />
             <label for="numOfQuestions">Number of questions:</label>
-            <input id="numOfQuestions" type="number" value="10" min="5" max="10"> <br>
+            <input
+              id="numOfQuestions"
+              type="number"
+              value="10"
+              min="5"
+              max="10"
+            />
+            <br />
             <button id="startBtn">Start</button>
+          </div>
+          <div id="quizContainer" class="container">
+            <button id="nextBtn" class="hideElement">Nästa</button>
+
+            <h2 id="questionContainer"></h2>
+          </div>
         </div>
-        
-    </div> 
-
-    <div id="quizContainer" class="container">
-        <button id="nextBtn" class="hideElement">Nästa</button> 
-        <h2 id="questionContainer"></h2>    
+      </div>
     </div>
-    
-    
     <script src="script.js"></script>
-
-</body>
+  </body>
 </html>
